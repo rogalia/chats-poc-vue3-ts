@@ -1,5 +1,30 @@
-# Vue 3 + TypeScript + Vite
+# REST/WebSocket Chat App
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+## Running
+npm install  
+npm run dev:all
 
-Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
+
+UI will be available on http://localhost:5173/
+
+## UI
+Left menu with 3 options:
+1. Both chats - both chats on the same url
+2. REST chat - url with the rest chat
+3. Websocket chat - url with websocket chat
+
+## Functionality
+Chats that generate messages with random symbols, up to 10 words in response to an each message entered by the user.  
+Chats are empty by default - type something to see messages.  
+Each chat has the own history. History of each chat is saved in local storage.  
+Deleting of chats history - via local storage browser ui.  
+
+## Structure
+Frontend part is in src dir.  
+Backend part is in server dir.  
+
+Both chats has the same view - Chat.vue component.  
+
+Handlers of backend connection are in composables dir.  
+If backend responce be changed - handlers can be modified accordingly.  
+If chats has to have different displaying of messages - it is possible to move this displaying in separate components inside of Chat comp.  

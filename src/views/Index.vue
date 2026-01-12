@@ -6,26 +6,28 @@
                 <Chat title="REST chat"
                       :messages="restMessages"
                       :loading="restLoading"
-                      @send="sendRESTMessage"
+                      @sendMessage="sendRESTMessage"
+                      @deleteMessage="deleteRESTMessage"
                 />
 
                 <Chat title="Websocket chat"
                       :messages="wsMessages"
                       :loading="wsLoading"
-                      @send="sendWSMessage"
+                      @sendMessage="sendWsMessage"
+                      @deleteMessage="deleteWsMessage"
                 />
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import Chat from '@/components/Chat.vue';
+import Chat from '@/components/Chat.vue'
 
 import { useRest } from '@/composables/useRest'
-const { restMessages, restLoading, sendRESTMessage } = useRest()
+const { restMessages, restLoading, sendRESTMessage, deleteRESTMessage } = useRest()
 
 import { useWebsocket } from '@/composables/useWebsocket'
-const { wsMessages, wsLoading, sendWSMessage } = useWebsocket()
+const { wsMessages, wsLoading, sendWsMessage, deleteWsMessage } = useWebsocket()
 </script>
 
 <style scoped>

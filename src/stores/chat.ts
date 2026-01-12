@@ -1,13 +1,20 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
+const LOCAL_STORAGE_KEYS = {
+    REST_MESSAGES: 'restMessages',
+    WS_MESSAGES: 'wsMessages',
+} as const
+
+type StorageKey = typeof LOCAL_STORAGE_KEYS[keyof typeof LOCAL_STORAGE_KEYS]
+
 export const useChatStore = defineStore('chat', () => {
     const restMessages = ref<Message[]>([])
     const wsMessages = ref<Message[]>([])
 
-    function loadMessagesFromStorage() {
-        const rest = localStorage.getItem('restMessages')
-        const ws = localStorage.getItem('wsMessages')
+    function loadMessagesFromLocalStorage() {
+        const rest = localStorage.getItem(LOCAL_STORAGE_KEYS.REST_MESSAGES)
+        const ws = localStorage.getItem(LOCAL_STORAGE_KEYS.WS_MESSAGES)
 
         if (rest) {
             restMessages.value = JSON.parse(rest)
@@ -17,23 +24,41 @@ export const useChatStore = defineStore('chat', () => {
         }
     }
 
+    function syncWithLocalStorage(storageKey: StorageKey, messages: Message[]) {
+        localStorage.setItem(storageKey, JSON.stringify(messages))
+    }
+
     function addRestMessage(message: Message) {
         restMessages.value.push(message)
 
-        localStorage.setItem('restMessages', JSON.stringify(restMessages.value))
+        syncWithLocalStorage(LOCAL_STORAGE_KEYS.REST_MESSAGES, restMessages.value)
     }
 
     function addWsMessage(message: Message) {
         wsMessages.value.push(message)
 
-        localStorage.setItem('wsMessages', JSON.stringify(wsMessages.value))
+        syncWithLocalStorage(LOCAL_STORAGE_KEYS.WS_MESSAGES, wsMessages.value)
+    }
+
+    function deleteRestMessage(timestamp: number) {
+        restMessages.value = restMessages.value.filter(message => message.timestamp !== timestamp)
+
+        syncWithLocalStorage(LOCAL_STORAGE_KEYS.REST_MESSAGES, restMessages.value)
+    }
+
+    function deleteWsMessage(timestamp: number) {
+        wsMessages.value = wsMessages.value.filter(message => message.timestamp !== timestamp)
+
+        syncWithLocalStorage(LOCAL_STORAGE_KEYS.WS_MESSAGES, wsMessages.value)
     }
 
     return {
         restMessages,
         wsMessages,
-        loadMessagesFromStorage,
+        loadMessagesFromLocalStorage,
         addRestMessage,
         addWsMessage,
+        deleteRestMessage,
+        deleteWsMessage
     }
 })

@@ -1,10 +1,13 @@
 import { ref } from 'vue'
-import { useChatStore } from '@/stores/chat'
-
+import { storeToRefs } from 'pinia'
 import axios from 'axios'
+
+import { useChatStore } from '@/stores/chat'
 
 export function useRest() {
     const store = useChatStore()
+
+    const { restMessages } = storeToRefs(store)
 
     const restLoading = ref(false)
 
@@ -16,7 +19,7 @@ export function useRest() {
         const userMessage: Message = {
             text,
             isUser: true,
-            timestamp: new Date().toLocaleTimeString()
+            timestamp: Date.now()
         }
 
         store.addRestMessage(userMessage)
@@ -33,22 +36,27 @@ export function useRest() {
             store.addRestMessage({
                 text: responce.data.reply,
                 isUser: false,
-                timestamp: new Date().toLocaleTimeString(),
+                timestamp: Date.now()
             })
         } catch (err) {
             store.addRestMessage({
                 text: 'Server error',
                 isUser: false,
-                timestamp: new Date().toLocaleTimeString(),
+                timestamp: Date.now()
             })
         } finally {
             restLoading.value = false
         }
     }
 
+    const deleteRESTMessage = (timestamp: number) => {
+        store.deleteRestMessage(timestamp)
+    }
+
     return {
-        restMessages: store.restMessages,
-        restLoading: restLoading,
-        sendRESTMessage
+        restMessages,
+        restLoading,
+        sendRESTMessage,
+        deleteRESTMessage
     }
 }

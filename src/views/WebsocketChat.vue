@@ -2,7 +2,8 @@
     <Chat title="Websocket chat"
           :messages="wsMessages"
           :loading="wsLoading"
-          @send="sendWSMessage"
+          @sendMessage="sendWsMessage"
+          @deleteMessage="deleteWsMessage"
     />
 </template>
 
@@ -11,5 +12,5 @@ import Chat from '@/components/Chat.vue'
 
 import { useWebsocket } from '@/composables/useWebsocket'
 
-const { wsMessages, wsLoading, sendWSMessage } = useWebsocket()
+const { wsMessages, wsLoading, sendWsMessage, deleteWsMessage } = useWebsocket()
 </script>

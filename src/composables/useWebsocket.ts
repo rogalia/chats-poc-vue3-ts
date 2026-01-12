@@ -1,31 +1,17 @@
 import { ref, onMounted, onUnmounted } from 'vue'
-import { useChatStore } from '@/stores/chat'
-
+import { storeToRefs } from 'pinia'
 import { io, type Socket } from 'socket.io-client'
+
+import { useChatStore } from '@/stores/chat'
 
 export function useWebsocket() {
     const store = useChatStore()
 
+    const { wsMessages } = storeToRefs(store)
+
     const wsLoading = ref(false)
 
     let socket: Socket | null = null
-
-    const sendWSMessage = (text: string) => {
-        if (!text.trim() || wsLoading.value || !socket) {
-            return
-        }
-
-        const userMessage: Message = {
-            text,
-            isUser: true,
-            timestamp: new Date().toLocaleTimeString()
-        }
-
-        store.addWsMessage(userMessage)
-        wsLoading.value = true
-
-        socket.emit('chat:message', text)
-    }
 
     onMounted(() => {
         socket = io(API.websocket)
@@ -36,7 +22,7 @@ export function useWebsocket() {
                 store.addWsMessage({
                     text: responce,
                     isUser: false,
-                    timestamp: new Date().toLocaleTimeString()
+                    timestamp: Date.now()
                 })
 
                 wsLoading.value = false
@@ -48,9 +34,31 @@ export function useWebsocket() {
         socket?.disconnect()
     })
 
+    const sendWsMessage = (text: string) => {
+        if (!text.trim() || wsLoading.value || !socket) {
+            return
+        }
+
+        const userMessage: Message = {
+            text,
+            isUser: true,
+            timestamp: Date.now()
+        }
+
+        store.addWsMessage(userMessage)
+        wsLoading.value = true
+
+        socket.emit('chat:message', text)
+    }
+
+    const deleteWsMessage = (timestamp: number) => {
+        store.deleteWsMessage(timestamp)
+    }
+
     return {
-        wsMessages: store.wsMessages,
-        wsLoading: wsLoading,
-        sendWSMessage
+        wsMessages,
+        wsLoading,
+        sendWsMessage,
+        deleteWsMessage
     }
 }

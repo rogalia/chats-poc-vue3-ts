@@ -9,11 +9,11 @@
 </template>
 
 <script setup lang="ts">
-import Nav from '@/components/Nav.vue';
+import Nav from '@/components/Nav.vue'
 
 import { useChatStore } from '@/stores/chat'
 
-useChatStore().loadMessagesFromStorage()
+useChatStore().loadMessagesFromLocalStorage()
 </script>
 
 <style scoped>

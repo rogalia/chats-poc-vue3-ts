@@ -1,4 +1,4 @@
-export function getRandomReply(): string {
+export function getRandomResponce(): string {
     const wordsCount = Math.max(1, Math.min(10, Math.floor(Math.random() * 10) + 1)),
         chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789',
         words: string[] = []

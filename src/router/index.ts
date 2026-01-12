@@ -1,25 +1,21 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
 
-import Index from '@/views/Index.vue'
-import RestChat from '@/views/RestChat.vue'
-import WebsocketChat from '@/views/WebsocketChat.vue'
-
 const routes: RouteRecordRaw[] = [
     {
         path: '/index',
         name: 'Index',
-        component: Index
+        component: () => import('@/views/Index.vue')
     },
     {
         path: '/rest-chat',
         name: 'RestChat',
-        component: RestChat
+        component: () => import('@/views/RestChat.vue')
     },
     {
         path: '/websocket-chat',
         name: 'WebsocketChat',
-        component: WebsocketChat
+        component: () => import('@/views/WebsocketChat.vue')
     },
     {
         path: '/',

@@ -21,7 +21,7 @@
 <script setup lang="ts">
 import { useChatStore } from '@/stores/chat'
 
-useChatStore().loadFromStorage()
+useChatStore().loadMessagesFromStorage()
 </script>
 
 <style scoped>

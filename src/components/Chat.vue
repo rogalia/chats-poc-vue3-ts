@@ -51,17 +51,19 @@ const emit = defineEmits<{
     send: [text: string]
 }>()
 
-const input = ref(''),
-    messagesEl = ref<HTMLElement | null>(null)
+const input = ref('')
+const messagesEl = ref<HTMLElement | null>(null)
 
 const send = () => {
-    if (!input.value.trim()) {
+    const trimmedValue = input.value.trim()
+
+    if (!trimmedValue) {
         return
     }
 
     emit(
         'send',
-        input.value.trim()
+        trimmedValue
     )
 
     input.value = ''
@@ -98,7 +100,7 @@ watch(props.messages, () => {
     gap: 8px;
 }
 
-.chat__messages>div {
+.chat__messages > div {
     max-width: 80%;
     padding: 10px 14px;
     border-radius: 18px;

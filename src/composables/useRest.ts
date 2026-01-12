@@ -1,12 +1,12 @@
-import { ref, computed, readonly } from 'vue'
+import { ref } from 'vue'
 import { useChatStore } from '@/stores/chat'
 
 import axios from 'axios'
 
 export function useRest() {
-    const store = useChatStore(),
-        restLoading = ref(false),
-        restMessages = computed(() => store.getRestMessages)
+    const store = useChatStore()
+
+    const restLoading = ref(false)
 
     const sendRESTMessage = async (text: string) => {
         if (!text.trim() || restLoading.value) {
@@ -23,7 +23,7 @@ export function useRest() {
         restLoading.value = true
 
         try {
-            const res = await axios.post(
+            const responce = await axios.post(
                 API.rest,
                 {
                     message: text
@@ -31,7 +31,7 @@ export function useRest() {
             )
 
             store.addRestMessage({
-                text: res.data.reply,
+                text: responce.data.reply,
                 isUser: false,
                 timestamp: new Date().toLocaleTimeString(),
             })
@@ -47,8 +47,8 @@ export function useRest() {
     }
 
     return {
-        restMessages: readonly(restMessages),
-        restLoading: readonly(restLoading),
+        restMessages: store.restMessages,
+        restLoading: restLoading,
         sendRESTMessage
     }
 }

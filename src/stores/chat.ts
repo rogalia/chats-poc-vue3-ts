@@ -1,44 +1,39 @@
 import { defineStore } from 'pinia'
+import { ref } from 'vue'
 
-interface ChatState {
-    restMessages: Message[]
-    wsMessages: Message[]
-}
+export const useChatStore = defineStore('chat', () => {
+    const restMessages = ref<Message[]>([])
+    const wsMessages = ref<Message[]>([])
 
-export const useChatStore = defineStore('chat', {
-    state: (): ChatState => ({
-        restMessages: [],
-        wsMessages: [],
-    }),
+    function loadMessagesFromStorage() {
+        const rest = localStorage.getItem('restMessages')
+        const ws = localStorage.getItem('wsMessages')
 
-    getters: {
-        getRestMessages: (state) => state.restMessages,
-        getWsMessages: (state) => state.wsMessages,
-    },
+        if (rest) {
+            restMessages.value = JSON.parse(rest)
+        }
+        if (ws) {
+            wsMessages.value = JSON.parse(ws)
+        }
+    }
 
-    actions: {
-        loadFromStorage() {
-            const rest = localStorage.getItem('restMessages'),
-                ws = localStorage.getItem('wsMessages')
+    function addRestMessage(message: Message) {
+        restMessages.value.push(message)
 
-            if (rest) {
-                this.restMessages = JSON.parse(rest)
-            }
-            if (ws) {
-                this.wsMessages = JSON.parse(ws)
-            }
-        },
+        localStorage.setItem('restMessages', JSON.stringify(restMessages.value))
+    }
 
-        addRestMessage(message: Message) {
-            this.restMessages.push(message)
+    function addWsMessage(message: Message) {
+        wsMessages.value.push(message)
 
-            localStorage.setItem('restMessages', JSON.stringify(this.restMessages))
-        },
+        localStorage.setItem('wsMessages', JSON.stringify(wsMessages.value))
+    }
 
-        addWsMessage(message: Message) {
-            this.wsMessages.push(message)
-
-            localStorage.setItem('wsMessages', JSON.stringify(this.wsMessages))
-        },
-    },
+    return {
+        restMessages,
+        wsMessages,
+        loadMessagesFromStorage,
+        addRestMessage,
+        addWsMessage,
+    }
 })

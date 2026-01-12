@@ -2,7 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import { createServer } from 'http'
 import { Server } from 'socket.io'
-import { getRandomReply } from './messages'
+import { getRandomResponce } from './messages'
 
 const app = express(),
     httpServer = createServer(app),
@@ -27,14 +27,14 @@ app.post('/api/chat/message', (req, res) => {
     }
 
     setTimeout(() => {
-        res.json({ reply: getRandomReply() })
+        res.json({ reply: getRandomResponce() })
     }, 800) // imitation of delay
 })
 
 io.on('connection', (socket) => {
     socket.on('chat:message', (msg: string) => {
         setTimeout(() => {
-            socket.emit('chat:reply', getRandomReply())
+            socket.emit('chat:responce', getRandomResponce())
         }, 600) // imitation of delay
     })
 })

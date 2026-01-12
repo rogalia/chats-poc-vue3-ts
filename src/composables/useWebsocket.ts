@@ -1,12 +1,12 @@
-import { ref, onMounted, onUnmounted, computed, readonly } from 'vue'
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useChatStore } from '@/stores/chat'
 
 import { io, type Socket } from 'socket.io-client'
 
 export function useWebsocket() {
-    const store = useChatStore(),
-        wsLoading = ref(false),
-        wsMessages = computed(() => store.getWsMessages);
+    const store = useChatStore()
+
+    const wsLoading = ref(false)
 
     let socket: Socket | null = null
 
@@ -31,13 +31,14 @@ export function useWebsocket() {
         socket = io(API.websocket)
 
         socket.on(
-            'chat:reply',
-            (reply: string) => {
+            'chat:responce',
+            (responce: string) => {
                 store.addWsMessage({
-                    text: reply,
+                    text: responce,
                     isUser: false,
                     timestamp: new Date().toLocaleTimeString()
                 })
+
                 wsLoading.value = false
             }
         )
@@ -48,8 +49,8 @@ export function useWebsocket() {
     })
 
     return {
-        wsMessages: readonly(wsMessages),
-        wsLoading: readonly(wsLoading),
+        wsMessages: store.wsMessages,
+        wsLoading: wsLoading,
         sendWSMessage
     }
 }

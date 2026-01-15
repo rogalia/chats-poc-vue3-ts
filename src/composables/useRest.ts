@@ -52,11 +52,16 @@ export function useRest() {
     const deleteRESTMessage = (timestamp: number) => {
         store.deleteRestMessage(timestamp)
     }
+    
+    const clearRESTChat = () => {
+        store.clearRESTChat()
+    }
 
     return {
         restMessages,
         restLoading,
         sendRESTMessage,
-        deleteRESTMessage
+        deleteRESTMessage,
+        clearRESTChat
     }
 }

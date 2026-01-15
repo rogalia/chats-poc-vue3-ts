@@ -1,8 +1,20 @@
 <template>
     <div class="chat">
-        <h3>
-            {{ title }}
-        </h3>
+        <div class="chat__title">
+            <slot name="header-name">
+                <h3>
+                    {{ title }}
+                </h3>
+            </slot>
+
+            <button class="chat__clear-button"
+                    :disabled="loading || !messages.length"
+                    @click="clearChat"
+            >
+                Clear
+                <Delete class="chat__clear-icon" />
+            </button>
+        </div>
 
         <div class="chat__messages"
              ref="messagesEl"
@@ -39,13 +51,14 @@ import { ref, nextTick, watch } from 'vue'
 
 const props = defineProps<{
     messages: Message[]
-    title: string
+    title?: string
     loading?: boolean
 }>()
 
 const emit = defineEmits<{
     sendMessage: [text: string],
-    deleteMessage: [timestamp: number]
+    deleteMessage: [timestamp: number],
+    clearChat: []
 }>()
 
 const input = ref('')
@@ -80,6 +93,12 @@ watch(
 const deleteMessage = (timestamp: number) => {
     emit('deleteMessage', timestamp)
 }
+
+import Delete from "@/assets/delete.svg"
+
+const clearChat = () => {
+    emit('clearChat')
+}
 </script>
 
 <style scoped>
@@ -93,6 +112,34 @@ const deleteMessage = (timestamp: number) => {
     background: #fafafa;
     margin-top: 20px;
     width: 500px;
+}
+
+.chat__title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    color: black;
+}
+
+.chat__clear-button {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    background: transparent;
+    font-size: 12px;
+}
+
+.chat__clear-button:disabled {
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.chat__clear-icon {
+    width: 12px;
+    height: 12px;
+    margin-left: 4px;
+    stroke: red;
 }
 
 .chat__messages {
@@ -110,43 +157,6 @@ const deleteMessage = (timestamp: number) => {
     padding: 10px 14px;
     border-radius: 18px;
     word-wrap: break-word;
-}
-
-.chat__message {
-    align-self: flex-end;
-    background: #007bff;
-    color: white;
-}
-
-.chat__message--bot {
-    align-self: flex-start;
-    background: #e5e5ea;
-    color: #000;
-}
-
-.chat__message-footer {
-    margin-top: 4px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.chat__message-time {
-    font-size: 0.7em;
-    opacity: 0.7;
-    display: block;
-}
-
-.chat__message-delete {
-    width: 16px;
-    height: 16px;
-    margin-left: 16px;
-    cursor: pointer;
-    stroke: black;
-}
-
-.chat__message-delete--white {
-    stroke: white;
 }
 
 .chat__form {
@@ -175,5 +185,6 @@ const deleteMessage = (timestamp: number) => {
 .chat__button:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+    pointer-events: none;
 }
 </style>

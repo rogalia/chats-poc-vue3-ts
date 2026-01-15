@@ -54,11 +54,16 @@ export function useWebsocket() {
     const deleteWsMessage = (timestamp: number) => {
         store.deleteWsMessage(timestamp)
     }
+    
+    const clearWsChat = () => {
+        store.clearWsChat()
+    }
 
     return {
         wsMessages,
         wsLoading,
         sendWsMessage,
-        deleteWsMessage
+        deleteWsMessage,
+        clearWsChat
     }
 }

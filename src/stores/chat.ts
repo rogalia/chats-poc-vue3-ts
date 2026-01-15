@@ -51,6 +51,18 @@ export const useChatStore = defineStore('chat', () => {
 
         syncWithLocalStorage(LOCAL_STORAGE_KEYS.WS_MESSAGES, wsMessages.value)
     }
+    
+    function clearRESTChat() {
+        restMessages.value = []
+        
+        syncWithLocalStorage(LOCAL_STORAGE_KEYS.REST_MESSAGES, restMessages.value)
+    }
+    
+    function clearWsChat() {
+        wsMessages.value = []
+        
+        syncWithLocalStorage(LOCAL_STORAGE_KEYS.WS_MESSAGES, wsMessages.value)
+    }
 
     return {
         restMessages,
@@ -59,6 +71,8 @@ export const useChatStore = defineStore('chat', () => {
         addRestMessage,
         addWsMessage,
         deleteRestMessage,
-        deleteWsMessage
+        deleteWsMessage,
+        clearRESTChat,
+        clearWsChat
     }
 })

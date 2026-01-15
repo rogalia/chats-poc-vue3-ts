@@ -3,19 +3,31 @@
         <h1>Both chats</h1>
 
         <div class="both-chats__wrapper">
-                <Chat title="REST chat"
-                      :messages="restMessages"
+                <Chat :messages="restMessages"
                       :loading="restLoading"
                       @sendMessage="sendRESTMessage"
                       @deleteMessage="deleteRESTMessage"
-                />
+                      @clearChat="clearRESTChat"
+                >
+                    <template v-slot:header-name>
+                        <h4>
+                            REST chat
+                        </h4>
+                    </template>
+                </Chat>
 
-                <Chat title="Websocket chat"
-                      :messages="wsMessages"
+                <Chat :messages="wsMessages"
                       :loading="wsLoading"
                       @sendMessage="sendWsMessage"
                       @deleteMessage="deleteWsMessage"
-                />
+                      @clearChat="clearWsChat"
+                >
+                    <template v-slot:header-name>
+                        <h2>
+                            Websocket chat
+                        </h2>
+                    </template>
+                </Chat>
         </div>
     </div>
 </template>
@@ -24,10 +36,10 @@
 import Chat from '@/components/Chat.vue'
 
 import { useRest } from '@/composables/useRest'
-const { restMessages, restLoading, sendRESTMessage, deleteRESTMessage } = useRest()
+const { restMessages, restLoading, sendRESTMessage, deleteRESTMessage, clearRESTChat } = useRest()
 
 import { useWebsocket } from '@/composables/useWebsocket'
-const { wsMessages, wsLoading, sendWsMessage, deleteWsMessage } = useWebsocket()
+const { wsMessages, wsLoading, sendWsMessage, deleteWsMessage, clearWsChat } = useWebsocket()
 </script>
 
 <style scoped>

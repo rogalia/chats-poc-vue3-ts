@@ -1,6 +1,7 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { storeToRefs } from 'pinia'
-import { io, type Socket } from 'socket.io-client'
+
+import { connectWS, disconnectWS, sendWsMessageApi } from '@/services/wsChat.service'
 
 import { useChatStore } from '@/stores/chat'
 
@@ -11,31 +12,24 @@ export function useWebsocket() {
 
     const wsLoading = ref(false)
 
-    let socket: Socket | null = null
-
     onMounted(() => {
-        socket = io(API.websocket)
-
-        socket.on(
-            'chat:responce',
-            (responce: string) => {
-                store.addWsMessage({
-                    text: responce,
-                    isUser: false,
-                    timestamp: Date.now()
-                })
-
-                wsLoading.value = false
-            }
-        )
+        connectWS((response: string) => {
+            store.addWsMessage({
+                text: response,
+                isUser: false,
+                timestamp: Date.now()
+            })
+            
+            wsLoading.value = false
+        })
     })
 
     onUnmounted(() => {
-        socket?.disconnect()
+        disconnectWS()
     })
 
     const sendWsMessage = (text: string) => {
-        if (!text.trim() || wsLoading.value || !socket) {
+        if (!text.trim() || wsLoading.value) {
             return
         }
 
@@ -48,7 +42,7 @@ export function useWebsocket() {
         store.addWsMessage(userMessage)
         wsLoading.value = true
 
-        socket.emit('chat:message', text)
+        sendWsMessageApi(text)
     }
 
     const deleteWsMessage = (timestamp: number) => {

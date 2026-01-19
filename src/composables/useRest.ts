@@ -1,6 +1,7 @@
 import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
-import axios from 'axios'
+
+import { sendRestMessageAPI } from '@/services/restChat.service'
 
 import { useChatStore } from '@/stores/chat'
 
@@ -11,7 +12,7 @@ export function useRest() {
 
     const restLoading = ref(false)
 
-    const sendRESTMessage = async (text: string) => {
+    const sendRestMessage = async (text: string) => {
         if (!text.trim() || restLoading.value) {
             return
         }
@@ -26,15 +27,10 @@ export function useRest() {
         restLoading.value = true
 
         try {
-            const responce = await axios.post(
-                API.rest,
-                {
-                    message: text
-                }
-            )
+            const responseData = await sendRestMessageAPI(text)
 
             store.addRestMessage({
-                text: responce.data.reply,
+                text: responseData.reply,
                 isUser: false,
                 timestamp: Date.now()
             })
@@ -49,19 +45,19 @@ export function useRest() {
         }
     }
 
-    const deleteRESTMessage = (timestamp: number) => {
+    const deleteRestMessage = (timestamp: number) => {
         store.deleteRestMessage(timestamp)
     }
     
-    const clearRESTChat = () => {
-        store.clearRESTChat()
+    const clearRestChat = () => {
+        store.clearRestChat()
     }
 
     return {
         restMessages,
         restLoading,
-        sendRESTMessage,
-        deleteRESTMessage,
-        clearRESTChat
+        sendRestMessage,
+        deleteRestMessage,
+        clearRestChat
     }
 }

@@ -5,9 +5,9 @@
         <div class="both-chats__wrapper">
                 <Chat :messages="restMessages"
                       :loading="restLoading"
-                      @sendMessage="sendRESTMessage"
-                      @deleteMessage="deleteRESTMessage"
-                      @clearChat="clearRESTChat"
+                      @sendMessage="sendRestMessage"
+                      @deleteMessage="deleteRestMessage"
+                      @clearChat="clearRestChat"
                 >
                     <template v-slot:header-name>
                         <h4>
@@ -36,7 +36,7 @@
 import Chat from '@/components/Chat.vue'
 
 import { useRest } from '@/composables/useRest'
-const { restMessages, restLoading, sendRESTMessage, deleteRESTMessage, clearRESTChat } = useRest()
+const { restMessages, restLoading, sendRestMessage, deleteRestMessage, clearRestChat } = useRest()
 
 import { useWebsocket } from '@/composables/useWebsocket'
 const { wsMessages, wsLoading, sendWsMessage, deleteWsMessage, clearWsChat } = useWebsocket()

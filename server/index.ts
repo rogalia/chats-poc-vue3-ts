@@ -34,7 +34,7 @@ app.post('/api/chat/message', (req, res) => {
 io.on('connection', (socket) => {
     socket.on('chat:message', (msg: string) => {
         setTimeout(() => {
-            socket.emit('chat:responce', getRandomResponce())
+            socket.emit('chat:response', getRandomResponce())
         }, 600) // imitation of delay
     })
 })

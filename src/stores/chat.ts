@@ -27,35 +27,35 @@ export const useChatStore = defineStore('chat', () => {
     function syncWithLocalStorage(storageKey: StorageKey, messages: Message[]) {
         localStorage.setItem(storageKey, JSON.stringify(messages))
     }
-
     function addRestMessage(message: Message) {
         restMessages.value.push(message)
 
         syncWithLocalStorage(LOCAL_STORAGE_KEYS.REST_MESSAGES, restMessages.value)
     }
-
-    function addWsMessage(message: Message) {
-        wsMessages.value.push(message)
-
-        syncWithLocalStorage(LOCAL_STORAGE_KEYS.WS_MESSAGES, wsMessages.value)
-    }
-
+    
     function deleteRestMessage(timestamp: number) {
         restMessages.value = restMessages.value.filter(message => message.timestamp !== timestamp)
-
+        
         syncWithLocalStorage(LOCAL_STORAGE_KEYS.REST_MESSAGES, restMessages.value)
-    }
-
-    function deleteWsMessage(timestamp: number) {
-        wsMessages.value = wsMessages.value.filter(message => message.timestamp !== timestamp)
-
-        syncWithLocalStorage(LOCAL_STORAGE_KEYS.WS_MESSAGES, wsMessages.value)
     }
     
     function clearRestChat() {
         restMessages.value = []
         
         syncWithLocalStorage(LOCAL_STORAGE_KEYS.REST_MESSAGES, restMessages.value)
+    }
+    
+    // intentionally duplicated logic for clarity and separation of transport streams
+    function addWsMessage(message: Message) {
+        wsMessages.value.push(message)
+
+        syncWithLocalStorage(LOCAL_STORAGE_KEYS.WS_MESSAGES, wsMessages.value)
+    }
+
+    function deleteWsMessage(timestamp: number) {
+        wsMessages.value = wsMessages.value.filter(message => message.timestamp !== timestamp)
+
+        syncWithLocalStorage(LOCAL_STORAGE_KEYS.WS_MESSAGES, wsMessages.value)
     }
     
     function clearWsChat() {

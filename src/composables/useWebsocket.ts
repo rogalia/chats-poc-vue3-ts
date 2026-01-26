@@ -1,7 +1,7 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { storeToRefs } from 'pinia'
 
-import { connectWS, disconnectWS, sendWsMessageApi } from '@/services/wsChat.service'
+import { connectWS, disconnectWS, sendWsMessageAPI } from '@/services/wsChat.service'
 
 import { useChatStore } from '@/stores/chat'
 
@@ -42,7 +42,7 @@ export function useWebsocket() {
         store.addWsMessage(userMessage)
         wsLoading.value = true
 
-        sendWsMessageApi(text)
+        sendWsMessageAPI(text)
     }
 
     const deleteWsMessage = (timestamp: number) => {

@@ -17,6 +17,6 @@ export function disconnectWS() {
     socket?.disconnect()
 }
 
-export function sendWsMessageApi(text: string) {
+export function sendWsMessageAPI(text: string) {
     socket?.emit('chat:message', text)
 }
